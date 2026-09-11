@@ -1,0 +1,606 @@
+/* 单词记忆教练｜全局样式
+ * 设计原则（来自 01_角色定义）：
+ * - 信息密度低，初一学生一眼能看
+ * - 大按钮、低压力
+ * - 家长配置区与学生区视觉分离
+ */
+
+:root {
+  --c-bg: #fffaf2;
+  --c-card: #ffffff;
+  --c-primary: #ff8c42;
+  --c-primary-dark: #e6732b;
+  --c-success: #4caf50;
+  --c-error: #e74c3c;
+  --c-warn: #f39c12;
+  --c-text: #2c3e50;
+  --c-text-soft: #7f8c8d;
+  --c-border: #f0e6d8;
+  --c-shadow: 0 4px 16px rgba(255, 140, 66, 0.08);
+  --radius: 16px;
+  --radius-sm: 10px;
+  --font-zh: "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-en: "Comic Sans MS", "Arial Rounded MT Bold", system-ui;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  font-family: var(--font-zh);
+  color: var(--c-text);
+  background: var(--c-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+  color: inherit;
+}
+
+a { color: var(--c-primary-dark); text-decoration: none; }
+
+/* ============ 通用布局 ============ */
+.app {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 16px;
+  min-height: 100vh;
+}
+
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0 16px;
+  border-bottom: 2px dashed var(--c-border);
+  margin-bottom: 20px;
+}
+
+.app-title { font-size: 20px; font-weight: 700; }
+.app-profile {
+  font-size: 13px;
+  color: var(--c-text-soft);
+  background: var(--c-card);
+  padding: 6px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--c-border);
+  cursor: pointer;
+}
+
+/* ============ 卡片 ============ */
+.card {
+  background: var(--c-card);
+  border-radius: var(--radius);
+  box-shadow: var(--c-shadow);
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.card-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: var(--c-text);
+}
+
+.card-subtitle {
+  font-size: 13px;
+  color: var(--c-text-soft);
+  margin-bottom: 16px;
+}
+
+/* ============ 按钮 ============ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 12px 20px;
+  border-radius: 24px;
+  font-size: 15px;
+  font-weight: 600;
+  background: var(--c-primary);
+  color: white;
+  transition: transform 0.1s, background 0.2s;
+  min-height: 44px;
+}
+
+.btn:hover { background: var(--c-primary-dark); }
+.btn:active { transform: scale(0.97); }
+.btn:disabled { background: #ccc; cursor: not-allowed; }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--c-primary-dark);
+  border: 2px solid var(--c-primary);
+}
+.btn-ghost:hover { background: rgba(255, 140, 66, 0.08); }
+
+.btn-block { width: 100%; }
+.btn-sm { padding: 8px 14px; font-size: 13px; min-height: 32px; }
+
+/* ============ 单词大展示 ============ */
+.word-hero {
+  text-align: center;
+  padding: 24px 0;
+}
+.word-hero .word {
+  font-family: var(--font-en);
+  font-size: 56px;
+  font-weight: 700;
+  color: var(--c-primary);
+  letter-spacing: 2px;
+}
+.word-hero .ipa {
+  font-size: 18px;
+  color: var(--c-text-soft);
+  margin-top: 8px;
+  font-family: var(--font-en);
+}
+.word-hero .meaning {
+  font-size: 16px;
+  color: var(--c-text);
+  margin-top: 12px;
+}
+
+/* ============ 步骤条 ============ */
+.steps {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 16px;
+  overflow-x: auto;
+}
+.step {
+  flex-shrink: 0;
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  background: #f5f0e8;
+  color: var(--c-text-soft);
+}
+.step.active { background: var(--c-primary); color: white; }
+.step.done { background: var(--c-success); color: white; }
+
+/* ============ 听写专用 ============ */
+.dictation-stage {
+  text-align: center;
+  padding: 60px 20px;
+  background: linear-gradient(180deg, #fff5e8 0%, #fffaf2 100%);
+  border-radius: var(--radius);
+  min-height: 320px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+}
+.dictation-counter {
+  font-size: 14px;
+  color: var(--c-text-soft);
+}
+.dictation-controls {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.dictation-tip {
+  font-size: 14px;
+  color: var(--c-text-soft);
+  max-width: 320px;
+  line-height: 1.6;
+}
+.dictation-input {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 16px;
+}
+.dictation-input input {
+  font-family: var(--font-en);
+  font-size: 24px;
+  letter-spacing: 4px;
+  text-align: center;
+  padding: 12px 16px;
+  border: 2px solid var(--c-border);
+  border-radius: var(--radius-sm);
+  width: 220px;
+  outline: none;
+  background: white;
+}
+.dictation-input input:focus { border-color: var(--c-primary); }
+
+.feedback {
+  text-align: center;
+  padding: 16px;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  margin: 12px 0;
+}
+.feedback.ok { background: #e8f5e9; color: #2e7d32; }
+.feedback.err { background: #fdecea; color: #c62828; }
+
+/* ============ 列表 ============ */
+.word-list { list-style: none; }
+.word-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  border-bottom: 1px solid var(--c-border);
+}
+.word-list li:last-child { border-bottom: none; }
+.word-list .word-text { font-family: var(--font-en); font-size: 18px; font-weight: 600; }
+.word-list .word-meta { font-size: 12px; color: var(--c-text-soft); }
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  background: #f5f0e8;
+  color: var(--c-text-soft);
+}
+.badge.master { background: #e8f5e9; color: #2e7d32; }
+.badge.dictation-err { background: #fff3e0; color: #e65100; }
+.badge.review { background: #e3f2fd; color: #1565c0; }
+
+/* ============ 弹窗 ============ */
+.modal-mask {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.4);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 20px;
+}
+.modal-mask.show { display: flex; }
+.modal {
+  background: var(--c-card);
+  border-radius: var(--radius);
+  padding: 24px;
+  max-width: 480px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+.modal h3 { margin-bottom: 12px; }
+.modal .field { margin-bottom: 14px; }
+.modal label { display: block; font-size: 13px; color: var(--c-text-soft); margin-bottom: 4px; }
+.modal input, .modal select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-family: inherit;
+  background: white;
+}
+.modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; }
+
+/* ============ 错词卡片 ============ */
+.wrong-word {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff8f3;
+  border-left: 4px solid var(--c-error);
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+}
+.wrong-word .word-text { font-family: var(--font-en); font-size: 18px; font-weight: 600; }
+
+/* ============ 提示条 ============ */
+.notice {
+  background: #fff8e1;
+  border-left: 4px solid var(--c-warn);
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  color: #6d4c00;
+  margin-bottom: 16px;
+  line-height: 1.6;
+}
+
+/* ============ 段落/特位展示 ============ */
+.syllables {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 16px 0;
+}
+.syllable {
+  background: #f5f0e8;
+  padding: 12px 18px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-en);
+  font-size: 22px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.15s;
+}
+.syllable:hover { border-color: var(--c-primary); background: #ffeed8; }
+.syllable.playing { background: var(--c-primary); color: white; }
+
+.phoneme-row {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 8px 0;
+}
+.phoneme {
+  background: #f5f0e8;
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  text-align: center;
+  min-width: 60px;
+}
+.phoneme .letters { font-family: var(--font-en); font-size: 18px; font-weight: 700; }
+.phoneme .sound { font-size: 12px; color: var(--c-text-soft); font-family: var(--font-en); }
+
+.special-tip {
+  background: #fff3e0;
+  border-left: 3px solid var(--c-warn);
+  padding: 10px 12px;
+  margin: 8px 0;
+  font-size: 13px;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+.hidden-answer {
+  background: #eee;
+  color: transparent;
+  user-select: none;
+  border-radius: 4px;
+  padding: 2px 8px;
+}
+.hidden-answer.revealed { background: transparent; color: var(--c-text); user-select: text; }
+
+/* ============ 答题区 ============ */
+.recall-input {
+  font-family: var(--font-en);
+  font-size: 22px;
+  letter-spacing: 3px;
+  text-align: center;
+  padding: 10px 16px;
+  border: 2px solid var(--c-border);
+  border-radius: var(--radius-sm);
+  width: 100%;
+  outline: none;
+  background: white;
+  margin: 12px 0;
+}
+.recall-input:focus { border-color: var(--c-primary); }
+
+/* ============ 重复次数角标（D005） ============ */
+.badge-times {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.25);
+  color: white;
+  padding: 2px 6px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  margin-left: 4px;
+}
+.btn-ghost .badge-times {
+  background: rgba(255, 140, 66, 0.15);
+  color: var(--c-primary-dark);
+}
+
+/* ============ Stepper 控件（D005 家长配置） ============ */
+.stepper-field {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--c-border);
+}
+.stepper-field:last-of-type { border-bottom: none; }
+.stepper-field label {
+  margin-bottom: 0 !important;
+  flex: 1;
+}
+.stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #f5f0e8;
+  border-radius: 20px;
+  padding: 2px;
+}
+.stepper-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: white;
+  color: var(--c-primary-dark);
+  font-size: 16px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--c-border);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.stepper-btn:hover { background: var(--c-primary); color: white; }
+.stepper-btn:active { transform: scale(0.92); }
+.stepper-val {
+  min-width: 28px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--c-text);
+}
+.stepper-hint {
+  font-size: 12px;
+  color: var(--c-text-soft);
+  margin-left: 4px;
+}
+
+/* ============ 单元切换（D007） ============ */
+.unit-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  margin-top: 8px;
+}
+.unit-chip {
+  padding: 10px 4px;
+  border-radius: 12px;
+  background: var(--c-bg-soft, #f5f0e8);
+  color: var(--c-text, #5b3a29);
+  font-size: 13px;
+  font-weight: 600;
+  border: 1px solid var(--c-border, #e6dac8);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.unit-chip:hover {
+  background: var(--c-primary-soft, #f9d56e);
+  transform: translateY(-1px);
+}
+.unit-chip.active {
+  background: var(--c-primary, #f4a261);
+  color: white;
+  border-color: var(--c-primary-dark, #e76f51);
+  box-shadow: 0 2px 6px rgba(244, 162, 97, 0.4);
+}
+
+/* ============ 重点/了解角标（D008） ============ */
+.importance-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 16px 8px;
+}
+.importance-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.importance-badge.key {
+  background: #ffe5e5;
+  color: #c92a2a;
+  border: 1px solid #ffa8a8;
+}
+.importance-badge.normal {
+  background: #f1f3f5;
+  color: #868e96;
+  border: 1px solid #dee2e6;
+}
+.importance-tip {
+  font-size: 12px;
+  color: var(--c-text-soft);
+}
+
+/* ============ 复习词角标（D010） ============ */
+.review-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 700;
+  background: #fff4e6;
+  color: #d97706;
+  border: 1px solid #ffd8a8;
+  white-space: nowrap;
+}
+
+/* ============ D011 听写拍照上传 + 批改 ============ */
+.dictation-photo-preview {
+  min-height: 60px;
+  border: 2px dashed #d4c5a9;
+  border-radius: 8px;
+  padding: 8px;
+  text-align: center;
+  background: #faf6ee;
+}
+.dictation-photo-thumb {
+  max-width: 100%;
+  max-height: 300px;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+.dictation-photo-full {
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+}
+.grade-grid {
+  display: grid;
+  gap: 12px;
+  margin: 12px 0;
+}
+.grade-item {
+  background: #faf6ee;
+  border: 1px solid var(--c-border, #e5dcc8);
+  border-radius: 8px;
+  padding: 12px;
+}
+.grade-word {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--c-primary-dark, #6b4423);
+  margin-bottom: 4px;
+}
+.grade-meaning {
+  font-size: 13px;
+  color: var(--c-text-soft, #8a7e6b);
+  margin-bottom: 8px;
+}
+.grade-actions {
+  display: flex;
+  gap: 8px;
+}
+.btn-grade {
+  flex: 1;
+  padding: 10px;
+  border: 2px solid transparent;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  background: white;
+  transition: all 0.2s;
+}
+.btn-grade.correct { color: #2f9e44; border-color: #d3f9d8; }
+.btn-grade.correct.selected,
+.btn-grade.correct:hover { background: #2f9e44; color: white; border-color: #2f9e44; }
+.btn-grade.wrong { color: #c92a2a; border-color: #ffe3e3; }
+.btn-grade.wrong.selected,
+.btn-grade.wrong:hover { background: #c92a2a; color: white; border-color: #c92a2a; }
+
+/* ============ Toggle 控件（D005） ============ */
+.toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  user-select: none;
+}
+.toggle input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--c-primary);
+  cursor: pointer;
+}

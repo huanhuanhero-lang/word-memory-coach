@@ -1,0 +1,19 @@
+{
+  "meta": {
+    "version": "1.0.0",
+    "textbook": "义务教育英语课程标准（2022年版）·人教版七年级上册",
+    "unit": "Starter Unit 2",
+    "unit_full": "Starter Unit 2",
+    "reviewed_by": "待审核",
+    "reviewed_at": null,
+    "review_notes": "课本词表录入（2022 版课标），需教师逐条审核。",
+    "schema_notes": "importance: 'key' 必会 / 'normal' 了解。phoneme_map 仅示范词完整。"
+  },
+  "words": [
+    { "id": "st2-bottle",  "word": "bottle",   "ipa": "/ˈbɒtl/",      "pos": "n.",  "syllables": ["bot", "tle"],     "meaning_zh": "瓶子",          "meaning_en": "a container for liquids",          "example_en": "Give me a bottle of water.",         "importance": "key",    "phoneme_map": [] },
+    { "id": "st2-eraser",  "word": "eraser",   "ipa": "/ɪˈreɪzə(r)/", "pos": "n.",  "syllables": ["e", "ra", "ser"], "meaning_zh": "橡皮",          "meaning_en": "a rubber for removing pencil",     "example_en": "May I use your eraser?",             "importance": "key",    "phoneme_map": [] },
+    { "id": "st2-key",     "word": "key",      "ipa": "/kiː/",        "pos": "n.",  "syllables": ["key"],           "meaning_zh": "钥匙；关键",     "meaning_en": "a small metal object for locking", "example_en": "I lost my key.",                    "importance": "key",    "phoneme_map": [] },
+    { "id": "st2-thing",   "word": "thing",    "ipa": "/θɪŋ/",        "pos": "n.",  "syllables": ["thing"],         "meaning_zh": "东西；事情",     "meaning_en": "an object or matter",              "example_en": "What's that thing on the desk?",     "importance": "key",    "phoneme_map": [] },
+    { "id": "st2-youre-welcome","word": "You're welcome","ipa": "/jɔː(r) ˈwelkəm/","pos": "phrase","syllables": ["You're", "wel", "come"],"meaning_zh": "别客气；不用谢","meaning_en": "a polite reply to thanks",          "example_en": "—Thanks! —You're welcome.",        "importance": "key",    "phoneme_map": [] }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "meta": {
+    "version": "1.0.0",
+    "textbook": "义务教育英语课程标准（2022年版）·人教版七年级上册",
+    "unit": "Starter Unit 3",
+    "unit_full": "Starter Unit 3",
+    "reviewed_by": "待审核",
+    "reviewed_at": null,
+    "review_notes": "课本词表录入（2022 版课标），需教师逐条审核。",
+    "schema_notes": "importance: 'key' 必会 / 'normal' 了解。phoneme_map 仅示范词完整。"
+  },
+  "words": [
+    { "id": "st3-fun",     "word": "fun",      "ipa": "/fʌn/",        "pos": "n.",  "syllables": ["fun"],            "meaning_zh": "乐趣；快乐",          "meaning_en": "enjoyment; pleasure",          "example_en": "Have fun at the party!",          "importance": "key",    "phoneme_map": [] },
+    { "id": "st3-funny",   "word": "funny",    "ipa": "/ˈfʌni/",      "pos": "adj.", "syllables": ["fun", "ny"],     "meaning_zh": "有趣的；使人快乐的",   "meaning_en": "causing laughter or amusement","example_en": "That joke is very funny.",       "importance": "key",    "phoneme_map": [] },
+    { "id": "st3-yard",    "word": "yard",     "ipa": "/jɑːd/",       "pos": "n.",  "syllables": ["yard"],           "meaning_zh": "院子；园圃",          "meaning_en": "an area of land next to a house","example_en": "The dog is in the yard.",         "importance": "key",    "phoneme_map": [] },
+    { "id": "st3-carrot",  "word": "carrot",   "ipa": "/ˈkærət/",     "pos": "n.",  "syllables": ["car", "rot"],     "meaning_zh": "胡萝卜",              "meaning_en": "an orange vegetable",          "example_en": "Rabbits love carrots.",           "importance": "key",    "phoneme_map": [] },
+    { "id": "st3-goose",   "word": "goose",    "ipa": "/ɡuːs/",       "pos": "n.",  "syllables": ["goose"],          "meaning_zh": "鹅",                  "meaning_en": "a large water bird",            "example_en": "A goose is swimming in the lake.","importance": "normal", "phoneme_map": [] },
+    { "id": "st3-count",   "word": "count",    "ipa": "/kaʊnt/",      "pos": "v.",  "syllables": ["count"],          "meaning_zh": "数数",                "meaning_en": "to say numbers in order",       "example_en": "Can you count to ten?",           "importance": "key",    "phoneme_map": [] },
+    { "id": "st3-another", "word": "another",  "ipa": "/əˈnʌðə(r)/",  "pos": "adj. & pron.","syllables": ["a", "noth", "er"],"meaning_zh": "另一；又一","meaning_en": "one more; different one",     "example_en": "Give me another apple.",         "importance": "key",    "phoneme_map": [] },
+    { "id": "st3-else",    "word": "else",     "ipa": "/els/",        "pos": "adv.", "syllables": ["else"],          "meaning_zh": "其他的；别的",         "meaning_en": "additional; different",         "example_en": "What else do you want?",          "importance": "key",    "phoneme_map": [] },
+    { "id": "st3-circle",  "word": "circle",   "ipa": "/ˈsɜːkl/",     "pos": "v. & n.","syllables": ["cir", "cle"],   "meaning_zh": "圈出；圆形；圆圈",     "meaning_en": "a round shape",                "example_en": "Circle the correct answer.",      "importance": "key",    "phoneme_map": [] },
+    { "id": "st3-look-at", "word": "look at",  "ipa": "/lʊk ət/",     "pos": "v.",  "syllables": ["look", "at"],     "meaning_zh": "看；瞧",              "meaning_en": "to direct your eyes towards",  "example_en": "Look at the blackboard.",         "importance": "key",    "phoneme_map": [] }
+  ]
+}

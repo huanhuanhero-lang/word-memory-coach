@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>单词记忆教练 · v0.3 MVP</title>
+<link rel="stylesheet" href="styles/app.css">
+</head>
+<body>
+
+<div id="app" class="app"></div>
+
+<!-- 决策记录：
+  v0.3 验收 D001 听写 / D002 HTML 原型 / D003 数据分层
+  全部数据存在本机 localStorage，零外部请求（除可选字体）
+  打开 index.html 即可使用，建议本地起一个静态服务（python -m http.server 8080）
+-->
+<script src="scripts/storage.js"></script>
+<script src="scripts/tts.js"></script>
+<script src="scripts/app.js"></script>
+
+</body>
+</html>

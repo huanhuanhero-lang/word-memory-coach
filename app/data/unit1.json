@@ -1,0 +1,35 @@
+{
+  "meta": {
+    "version": "1.0.0",
+    "textbook": "义务教育英语课程标准（2022年版）·人教版七年级上册",
+    "unit": "Starter Unit 1",
+    "unit_full": "Starter Unit 1",
+    "reviewed_by": "待审核",
+    "reviewed_at": null,
+    "review_notes": "本批次为课本词表录入（义务教育英语课程标准 2022 年版），所有词音标、释义需资深英语教师逐条审核。重点词（加粗）= 必掌握；非重点词 = 仅了解。",
+    "schema_notes": "platform_agnostic；字段不依赖 HTML/localStorage；audio_url 留空时回退浏览器 TTS。importance: 'key' 重点必会 / 'normal' 了解。phoneme_map 仅示范词完整，其他留 []。"
+  },
+  "words": [
+    { "id": "st1-unit",    "word": "unit",       "ipa": "/ˈjuːnɪt/",   "pos": "n.",  "syllables": ["u", "nit"],     "meaning_zh": "单元",          "meaning_en": "a single part of a textbook",        "example_en": "Open your book to Unit 1.",                "importance": "key",    "phoneme_map": [] },
+    { "id": "st1-starter", "word": "starter",    "ipa": "/ˈstɑːtə(r)/","pos": "n.",  "syllables": ["star", "ter"],   "meaning_zh": "开始；开端",      "meaning_en": "something that starts",                "example_en": "Read the Starter.",                       "importance": "normal", "phoneme_map": [] },
+    { "id": "st1-section", "word": "section",    "ipa": "/ˈsekʃn/",    "pos": "n.",  "syllables": ["sec", "tion"],   "meaning_zh": "部分；地区",      "meaning_en": "a part of something",                   "example_en": "Look at Section A.",                      "importance": "key",    "phoneme_map": [] },
+    { "id": "st1-greet",   "word": "greet",      "ipa": "/ɡriːt/",     "pos": "v.",  "syllables": ["greet"],         "meaning_zh": "打招呼；问候",     "meaning_en": "to say hello to someone",               "example_en": "I greet my teacher every morning.",       "importance": "key",    "phoneme_map": [] },
+    { "id": "st1-oh",      "word": "oh",         "ipa": "/əʊ/",        "pos": "interj.","syllables": ["oh"],          "meaning_zh": "哦；啊",         "meaning_en": "used to express surprise or realization","example_en": "Oh, I see.",                                "importance": "normal", "phoneme_map": [] },
+    { "id": "st1-everyone","word": "everyone",   "ipa": "/ˈevriwʌn/",  "pos": "pron.","syllables": ["ev", "ry", "one"],"meaning_zh": "每人；所有人",   "meaning_en": "every person",                          "example_en": "Everyone is here today.",                  "importance": "key",    "phoneme_map": [] },
+    { "id": "st1-start",   "word": "start",      "ipa": "/stɑːt/",     "pos": "v.",  "syllables": ["start"],         "meaning_zh": "开始；着手",      "meaning_en": "to begin doing something",              "example_en": "Let's start the class.",                   "importance": "key",    "phoneme_map": [] },
+    { "id": "st1-conversation","word": "conversation","ipa": "/ˌkɒnvəˈseɪʃn/","pos": "n.","syllables": ["con", "ver", "sa", "tion"],"meaning_zh": "谈话；交谈",     "meaning_en": "a talk between people",                 "example_en": "We had a long conversation.",              "importance": "key",    "phoneme_map": [] },
+    { "id": "st1-spell",   "word": "spell",      "ipa": "/spel/",      "pos": "v.",  "syllables": ["spell"],         "meaning_zh": "用字母拼；拼写",   "meaning_en": "to write a word letter by letter",       "example_en": "How do you spell your name?",              "importance": "key",    "phoneme_map": [] },
+    { "id": "st1-bell",    "word": "bell",       "ipa": "/bel/",       "pos": "n.",  "syllables": ["bell"],          "meaning_zh": "铃（声）；钟（声）","meaning_en": "a metal object that rings",              "example_en": "The bell rings at eight.",                 "importance": "key",    "phoneme_map": [] },
+    { "id": "st1-helen",   "word": "Helen",      "ipa": "/ˈhelən/",    "pos": "n.",  "syllables": ["He", "len"],     "meaning_zh": "海伦（人名）",    "meaning_en": "a female name",                          "example_en": "Helen is my friend.",                      "importance": "normal", "phoneme_map": [] },
+    { "id": "st1-ella",    "word": "Ella",       "ipa": "/ˈelə/",      "pos": "n.",  "syllables": ["El", "la"],      "meaning_zh": "埃拉（人名）",    "meaning_en": "a female name",                          "example_en": "Ella is in Class 1.",                      "importance": "normal", "phoneme_map": [] },
+    { "id": "st1-emma",    "word": "Emma",       "ipa": "/ˈemə/",      "pos": "n.",  "syllables": ["Em", "ma"],      "meaning_zh": "埃玛（人名）",    "meaning_en": "a female name",                          "example_en": "Emma likes apples.",                       "importance": "normal", "phoneme_map": [] },
+    { "id": "st1-peter",   "word": "Peter",      "ipa": "/ˈpiːtə(r)/", "pos": "n.",  "syllables": ["Pe", "ter"],     "meaning_zh": "彼得（人名）",    "meaning_en": "a male name",                            "example_en": "Peter is my brother.",                     "importance": "normal", "phoneme_map": [] },
+    { "id": "st1-brown",   "word": "Brown",      "ipa": "/braʊn/",     "pos": "n.",  "syllables": ["Brown"],         "meaning_zh": "布朗（姓）",      "meaning_en": "an English surname",                     "example_en": "Mr Brown is our teacher.",                 "importance": "normal", "phoneme_map": [] },
+    { "id": "st1-prc",     "word": "PRC",        "ipa": "/ˌpiː ɑː(r) ˈsiː/","pos": "n.","syllables": ["P", "R", "C"], "meaning_zh": "中华人民共和国",  "meaning_en": "the People's Republic of China",         "example_en": "I come from the PRC.",                     "importance": "key",    "phoneme_map": [] },
+    { "id": "st1-pla",     "word": "PLA",        "ipa": "/ˌpiː el ˈeɪ/","pos": "n.",  "syllables": ["P", "L", "A"],  "meaning_zh": "中国人民解放军",   "meaning_en": "the People's Liberation Army",           "example_en": "My father is in the PLA.",                 "importance": "key",    "phoneme_map": [] },
+    { "id": "st1-vr",      "word": "VR",         "ipa": "/ˌviː ˈɑː(r)/","pos": "n.",  "syllables": ["V", "R"],       "meaning_zh": "虚拟现实",        "meaning_en": "virtual reality",                        "example_en": "I love playing VR games.",                 "importance": "key",    "phoneme_map": [] },
+    { "id": "st1-who",     "word": "WHO",        "ipa": "/ˌdʌbljuː eɪtʃ ˈəʊ/","pos": "n.","syllables": ["W", "H", "O"],"meaning_zh": "世界卫生组织",    "meaning_en": "World Health Organization",              "example_en": "WHO helps people stay healthy.",           "importance": "normal", "phoneme_map": [] },
+    { "id": "st1-un",      "word": "UN",         "ipa": "/ˌjuː ˈen/",  "pos": "n.",  "syllables": ["U", "N"],       "meaning_zh": "联合国",          "meaning_en": "the United Nations",                     "example_en": "The UN has many members.",                 "importance": "normal", "phoneme_map": [] },
+    { "id": "st1-miller",  "word": "Miller",     "ipa": "/ˈmɪlə(r)/",  "pos": "n.",  "syllables": ["Mil", "ler"],    "meaning_zh": "米勒（姓）",      "meaning_en": "an English surname",                     "example_en": "Mrs Miller is kind.",                      "importance": "normal", "phoneme_map": [] }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "meta": {
+    "version": "1.0.0",
+    "textbook": "义务教育英语课程标准（2022年版）·人教版七年级上册",
+    "unit": "Unit 1",
+    "unit_full": "Unit 1: My Name's Gina",
+    "reviewed_by": "待审核",
+    "reviewed_at": null,
+    "review_notes": "课本词表录入（2022 版课标），需教师逐条审核。",
+    "schema_notes": "importance: 'key' 必会 / 'normal' 了解。phoneme_map 仅示范词完整。"
+  },
+  "words": [
+    { "id": "u1-hello",     "word": "hello",         "ipa": "/həˈləʊ/",          "pos": "int.",       "syllables": ["he", "llo"],          "meaning_zh": "你好；喂",                "meaning_en": "used as a greeting",                       "example_en": "Hello! How are you?",                  "importance": "key",    "phoneme_map": [
+        { "letters": "h",  "sound": "/h/",  "tip": "送气音，声带不振" },
+        { "letters": "e",  "sound": "/ə/",  "tip": "非重读，弱化" },
+        { "letters": "ll", "sound": "/l/",  "tip": "双 l 不发音双倍" },
+        { "letters": "o",  "sound": "/əʊ/", "tip": "英式 /əʊ/，美式 /oʊ/" }
+    ] },
+    { "id": "u1-name",      "word": "name",          "ipa": "/neɪm/",            "pos": "n.",         "syllables": ["name"],               "meaning_zh": "名字；姓名",              "meaning_en": "the word someone is called",             "example_en": "My name is Tom.",                       "importance": "key",    "phoneme_map": [
+        { "letters": "n", "sound": "/n/",  "tip": "鼻音，气流从鼻腔出" },
+        { "letters": "a", "sound": "/eɪ/", "tip": "字母 a 在开音节读 /eɪ/" },
+        { "letters": "m", "sound": "/m/",  "tip": "鼻音，双唇闭合" },
+        { "letters": "e", "sound": "silent","tip": "此处不发音（哑 e）" }
+    ] },
+    { "id": "u1-gina",      "word": "Gina",          "ipa": "/ˈdʒiːnə/",         "pos": "n.",         "syllables": ["Gi", "na"],           "meaning_zh": "吉娜（人名）",            "meaning_en": "a female name",                            "example_en": "Gina is my friend.",                     "importance": "key",    "phoneme_map": [] },
+    { "id": "u1-make-friends","word": "make friends","ipa": "/meɪk frendz/",     "pos": "v. & n.",    "syllables": ["make", "friends"],     "meaning_zh": "交朋友",                  "meaning_en": "to become friends with someone",          "example_en": "I want to make friends with you.",       "importance": "key",    "phoneme_map": [] },
+    { "id": "u1-get-to-know","word": "get to know",  "ipa": "/ɡet tə nəʊ/",      "pos": "v.",         "syllables": ["get", "to", "know"],   "meaning_zh": "认识；了解",              "meaning_en": "to learn about someone",                  "example_en": "Nice to get to know you.",                "importance": "key",    "phoneme_map": [] },
+    { "id": "u1-each",      "word": "each",          "ipa": "/iːtʃ/",            "pos": "adj. & pron.","syllables": ["each"],                "meaning_zh": "每个；各自",              "meaning_en": "every one of two or more",                "example_en": "Each student has a book.",                "importance": "key",    "phoneme_map": [] },
+    { "id": "u1-other",     "word": "other",         "ipa": "/ˈʌðə(r)/",         "pos": "adj. & pron.","syllables": ["oth", "er"],         "meaning_zh": "另外的人（或物）",         "meaning_en": "a different one",                          "example_en": "The other students are here.",            "importance": "key",    "phoneme_map": [] },
+    { "id": "u1-each-other","word": "each other",    "ipa": "/iːtʃ ˈʌðə(r)/",    "pos": "pron.",      "syllables": ["each", "oth", "er"],  "meaning_zh": "互相；彼此",              "meaning_en": "one another",                             "example_en": "They help each other.",                   "importance": "key",    "phoneme_map": [] },
+    { "id": "u1-full",      "word": "full",          "ipa": "/fʊl/",             "pos": "adj.",       "syllables": ["full"],                "meaning_zh": "完整的；满的",            "meaning_en": "containing as much as possible",          "example_en": "Write your full name here.",              "importance": "key",    "phoneme_map": [] },
+    { "id": "u1-full-name", "word": "full name",     "ipa": "/fʊl neɪm/",        "pos": "n.",         "syllables": ["full", "name"],        "meaning_zh": "全名",                    "meaning_en": "complete name",                            "example_en": "What's your full name?",                  "importance": "key",    "phoneme_map": [] },
+    { "id": "u1-grade",     "word": "grade",         "ipa": "/ɡreɪd/",           "pos": "n.",         "syllables": ["grade"],               "meaning_zh": "年级；等级",              "meaning_en": "a class or year in school",               "example_en": "I'm in Grade 7.",                         "importance": "key",    "phoneme_map": [] },
+    { "id": "u1-last-name", "word": "last name",     "ipa": "/lɑːst neɪm/",      "pos": "n.",         "syllables": ["last", "name"],        "meaning_zh": "姓氏",                    "meaning_en": "family name",                              "example_en": "My last name is Wang.",                   "importance": "key",    "phoneme_map": [] },
+    { "id": "u1-classmate", "word": "classmate",     "ipa": "/ˈklɑːsmeɪt/",      "pos": "n.",         "syllables": ["class", "mate"],       "meaning_zh": "同班同学",                "meaning_en": "a member of the same class",              "example_en": "She is my classmate.",                    "importance": "key",    "phoneme_map": [] },
+    { "id": "u1-class-teacher","word": "class teacher","ipa": "/klɑːs ˈtiːtʃə(r)/","pos": "n.",         "syllables": ["class", "teach", "er"],"meaning_zh": "班主任",                  "meaning_en": "main teacher of a class",                  "example_en": "Our class teacher is Mr Li.",              "importance": "key",    "phoneme_map": [] },
+    { "id": "u1-first-name","word": "first name",    "ipa": "/fɜːst neɪm/",      "pos": "n.",         "syllables": ["first", "name"],       "meaning_zh": "名字",                    "meaning_en": "given name",                               "example_en": "My first name is Wei.",                   "importance": "key",    "phoneme_map": [] },
+    { "id": "u1-mistake",   "word": "mistake",       "ipa": "/mɪˈsteɪk/",        "pos": "n.",         "syllables": ["mis", "take"],         "meaning_zh": "错误；失误",              "meaning_en": "something done wrong",                     "example_en": "Sorry, I made a mistake.",                "importance": "key",    "phoneme_map": [] },
+    { "id": "u1-country",   "word": "country",       "ipa": "/ˈkʌntri/",         "pos": "n.",         "syllables": ["coun", "try"],         "meaning_zh": "国家",                    "meaning_en": "a nation",                                 "example_en": "China is a great country.",               "importance": "key",    "phoneme_map": [] },
+    { "id": "u1-same",      "word": "same",          "ipa": "/seɪm/",            "pos": "adj.",       "syllables": ["same"],                "meaning_zh": "相同的",                  "meaning_en": "not different",                            "example_en": "We are in the same class.",               "importance": "key",    "phoneme_map": [] },
+    { "id": "u1-twin",      "word": "twin",          "ipa": "/twɪn/",            "pos": "n.",         "syllables": ["twin"],                "meaning_zh": "双胞胎之一",              "meaning_en": "one of two babies born at the same time","example_en": "She has a twin sister.",                  "importance": "normal", "phoneme_map": [] },
+    { "id": "u1-green",     "word": "Green",         "ipa": "/ɡriːn/",           "pos": "n.",         "syllables": ["Green"],               "meaning_zh": "格林（姓）",              "meaning_en": "an English surname",                       "example_en": "Mr Green is from the UK.",                "importance": "normal", "phoneme_map": [] },
+    { "id": "u1-uk",        "word": "UK",            "ipa": "/ˌjuː ˈkeɪ/",       "pos": "n.",         "syllables": ["U", "K"],             "meaning_zh": "英国",                    "meaning_en": "the United Kingdom",                       "example_en": "I live in the UK.",                       "importance": "key",    "phoneme_map": [] },
+    { "id": "u1-us",        "word": "US",            "ipa": "/ˌjuː ˈes/",        "pos": "n.",         "syllables": ["U", "S"],             "meaning_zh": "美国",                    "meaning_en": "the United States",                        "example_en": "The US is a big country.",                "importance": "key",    "phoneme_map": [] },
+    { "id": "u1-smith",     "word": "Smith",         "ipa": "/smɪθ/",            "pos": "n.",         "syllables": ["Smith"],               "meaning_zh": "史密斯（姓）",            "meaning_en": "an English surname",                       "example_en": "Alice Smith is my friend.",               "importance": "normal", "phoneme_map": [] }
+  ]
+}
