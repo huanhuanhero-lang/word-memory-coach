@@ -18,7 +18,7 @@ const App = {
     window.addEventListener('hashchange', () => this.render());
   },
 
-  /* 首次使用：数据存本机告知（D003 验收） */
+  /* 首次使用：数据存本机告知（D003 验收）+ 选择学校当前单元 */
   checkFirstRun() {
     const seen = localStorage.getItem('wordcoach.firstrun.seen');
     if (seen) return;
@@ -36,18 +36,52 @@ const App = {
             <label>给孩子起个昵称（仅本机显示）</label>
             <input id="firstrun-name" placeholder="例如：轩轩" value="我的孩子">
           </div>
+          <div class="field">
+            <label>👋 你家孩子学校<strong>当前学到</strong>第几单元？</label>
+            <div class="unit-grid" id="firstrun-units">
+              ${this.UNIT_IDS.map(id => `
+                <button type="button" class="unit-chip" data-pick-unit="${id}">
+                  ${id <= 3 ? 'Starter U' + id : 'Unit ' + (id - 3)}
+                </button>
+              `).join('')}
+            </div>
+            <p style="font-size:12px;color:var(--c-text-soft);margin-top:4px">
+              不知道？先选 Starter U1 也行，进首页底部「📖 切换单元」随时可改。
+            </p>
+          </div>
         `,
         actions: [
           { text: '开始使用', primary: true, onClick: () => {
             const v = document.getElementById('firstrun-name').value.trim() || '我的孩子';
-            Store.updateCurrentProfile(p => { p.name = v; return p; });
+            const picked = this._firstRunUnit || 1;
+            Store.updateCurrentProfile(p => {
+              p.name = v;
+              p.settings = { ...(p.settings || {}), current_unit: picked };
+              return p;
+            });
             localStorage.setItem('wordcoach.firstrun.seen', '1');
+            this._firstRunUnit = null;
+            this.invalidateWordsCache();
             this.closeModal();
             this.render();
           }}
         ]
       });
+      this._bindFirstRunUnitPicker();
     }, 200);
+  },
+
+  _bindFirstRunUnitPicker() {
+    const root = document.getElementById('firstrun-units');
+    if (!root) return;
+    root.addEventListener('click', (e) => {
+      const t = e.target.closest('[data-pick-unit]');
+      if (!t) return;
+      const id = parseInt(t.getAttribute('data-pick-unit'));
+      this._firstRunUnit = id;
+      root.querySelectorAll('.unit-chip').forEach(el => el.classList.remove('active'));
+      t.classList.add('active');
+    });
   },
 
   bindGlobal() {
@@ -75,6 +109,8 @@ const App = {
     TTS.stop();
     if (hash === '/' || hash === '') {
       this.renderHome(app);
+    } else if (hash === '/today') {
+      this.renderToday(app);
     } else if (hash.startsWith('/card/')) {
       this.currentWordId = hash.split('/')[2];
       this.renderCard(app, this.currentWordId);
@@ -121,6 +157,10 @@ const App = {
     const reviewCount = today.filter(w => w._studyType === 'review').length;
     const newCount = today.length - reviewCount;
 
+    const isFirstSession = !localStorage.getItem('wordcoach.firstrun.seen');
+    const dictQueue = this.getDictationQueue(data, profile, 5);
+    const hasDictationReady = dictQueue.length > 0;
+
     root.innerHTML = `
       <div class="app-header">
         <div class="app-title">🦊 单词记忆教练</div>
@@ -129,21 +169,29 @@ const App = {
 
       <div class="card">
         <div class="card-title">📚 今日挑战</div>
-        <div class="card-subtitle">${unitName} · 第 ${unitLearned + 1} / ${unitTotal} 词 · 今日 ${today.length} 个（${newCount} 新 ${reviewCount > 0 ? `+ ${reviewCount} 🔁复习` : ''}），预计 ${today.length * 3} 分钟</div>
-        <button class="btn btn-block" data-link="/card/${today[0]?.id || data.words[0].id}">开始学习 🚀</button>
-        ${(() => {
-          /* D011：今日听写按钮跳批量听写页（不再是单词页） */
-          const dictQueue = App.getDictationQueue(data, profile, 3);
-          if (dictQueue.length === 0) return '';
-          const hasSeenKey = data.words.some(w => w.importance === 'key' && seen[w.id]);
-          if (!hasSeenKey) return '';
-          return `<button class="btn btn-ghost btn-block" data-link="/dictation-batch/${currentUnit}" style="margin-top:8px">✍️ 今日听写（${dictQueue.length} 个 ⭐必会词）</button>`;
-        })()}
+        ${today.length === 0 ? `
+          <div class="notice" style="background:#e8f5e9;border-left-color:var(--c-success);color:#1b5e20">
+            🎉 <strong>${unitName}</strong> 全部学完啦！<br>
+            <span style="font-size:13px">可以去「错词本」巩固，或在下方切到学校下一单元继续。</span>
+          </div>
+        ` : `
+          <div class="card-subtitle">${unitName} · 第 ${unitLearned + 1} / ${unitTotal} 词 · 今日 ${today.length} 个（${newCount} 新 ${reviewCount > 0 ? `+ ${reviewCount} 🔁复习` : ''}），预计 ${today.length * 3} 分钟</div>
+          <button class="btn btn-block" data-link="/today">查看今日计划 →</button>
+        `}
+        ${hasDictationReady ? `
+          <button class="btn btn-ghost btn-block" data-link="/dictation-batch/${currentUnit}" style="margin-top:8px">✍️ 今日听写（${dictQueue.length} 个 ⭐必会词）</button>
+        ` : ''}
       </div>
 
       <div class="card">
         <div class="card-title">📖 切换单元</div>
-        <p class="card-subtitle">点击切换到学校当前在学的单元（可手动调整）</p>
+        ${isFirstSession ? `
+          <p class="card-subtitle" style="color:var(--c-primary-dark);font-weight:600">
+            👋 第一次用？告诉我你家孩子<strong>学校当前学到</strong>第几单元 👇
+          </p>
+        ` : `
+          <p class="card-subtitle">点击切换到学校当前在学的单元（可手动调整）</p>
+        `}
         <div class="unit-grid">
           ${this.UNIT_IDS.map(id => {
             const isCurrent = id === currentUnit;
@@ -172,6 +220,89 @@ const App = {
           <li><span>⚙️ 家长配置</span><span><a data-link="/settings">设置 →</a></span></li>
         </div>
       </div>
+    `;
+  },
+
+  /* ============ 今日计划页 ============
+   * 大数字展示今日总词数、新词/复习拆分、预计时长
+   * 列出每个词的概要（单词 + 角标 + 含义）
+   * CTA：开始学习第 1 词（学完后跳下一个，学完最后 1 词 → 跳批量听写） */
+  async renderToday(root) {
+    const profile = Store.getCurrentProfile();
+    const seen = profile.words_state || {};
+    const currentUnit = profile.settings.current_unit || 1;
+    const data = await this.loadWords(currentUnit);
+    const all = await this.loadAllUnits();
+    const today = this.getPriorityQueue(data, all, profile);
+
+    const unitName = data.meta?.unit || `Unit ${currentUnit}`;
+    const total = today.length;
+    const reviewCount = today.filter(w => w._studyType === 'review').length;
+    const newCount = total - reviewCount;
+    const minutes = total * 3;
+    const dictQueue = this.getDictationQueue(data, profile, 5);
+
+    if (total === 0) {
+      root.innerHTML = `
+        <div class="app-header">
+          <div class="app-title">🎯 今日计划</div>
+          <div class="app-profile" data-link="/">← 返回</div>
+        </div>
+        <div class="card">
+          <div class="notice" style="background:#e8f5e9;border-left-color:var(--c-success);color:#1b5e20">
+            🎉 <strong>${unitName}</strong> 全部学完啦！<br>
+            <span style="font-size:13px">可以去「错词本」巩固，或在首页切到下一单元继续。</span>
+          </div>
+        </div>
+      `;
+      return;
+    }
+
+    root.innerHTML = `
+      <div class="app-header">
+        <div class="app-title">🎯 今日计划</div>
+        <div class="app-profile" data-link="/">← 返回</div>
+      </div>
+
+      <div class="card" style="text-align:center;background:linear-gradient(135deg,#fff5e8 0%,#ffeed8 100%)">
+        <div style="font-size:13px;color:var(--c-text-soft)">${unitName}</div>
+        <div style="font-size:64px;font-weight:800;color:var(--c-primary);line-height:1.1;margin:8px 0">${total}<span style="font-size:24px;color:var(--c-text-soft);font-weight:600"> 个单词</span></div>
+        <div style="display:flex;justify-content:center;gap:24px;font-size:14px;margin-top:8px">
+          <span>🆕 <strong>${newCount}</strong> 新词</span>
+          ${reviewCount > 0 ? `<span>🔁 <strong>${reviewCount}</strong> 复习</span>` : ''}
+          <span>⏱ <strong>${minutes}</strong> 分钟</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">📝 今天要学的词</div>
+        <p class="card-subtitle">按计划一个个学，每个词走完 9 步教练流程。学完后统一听写。</p>
+        <div class="word-list">
+          ${today.map((w, i) => `
+            <li>
+              <span>
+                <span class="word-text">${i + 1}. ${w.word}</span>
+                ${w._studyType === 'review'
+                  ? '<span class="review-badge" style="margin-left:6px">🔁 复习</span>'
+                  : (w.importance === 'key'
+                      ? '<span class="importance-badge key" style="margin-left:6px">⭐</span>'
+                      : '<span class="importance-badge normal" style="margin-left:6px">·</span>')}
+              </span>
+              <span class="word-meta">${w.meaning_zh}</span>
+            </li>
+          `).join('')}
+        </div>
+      </div>
+
+      <button class="btn btn-block" data-link="/card/${today[0].id}">开始学习第 1 个 🚀</button>
+
+      ${dictQueue.length > 0 ? `
+        <div class="card" style="margin-top:16px;text-align:center">
+          <div class="card-title" style="font-size:14px">✍️ 学完统一听写</div>
+          <p class="card-subtitle">${dictQueue.length} 个 ⭐必会词已就绪。听写在全部单词学完后进行。</p>
+          <button class="btn btn-ghost" data-link="/dictation-batch/${currentUnit}">提前开始听写</button>
+        </div>
+      ` : ''}
     `;
   },
 
@@ -261,6 +392,14 @@ const App = {
     if (!word) { root.innerHTML = '<div class="card">单词不存在</div>'; return; }
     this._viewedWord = word;
     this._dictWord = null;
+
+    /* 用 today 队列填充 _currentQueue，让 stepDictationGate 知道下一个词是谁 */
+    if (!App._currentQueue || !App._currentQueue.find(w => w.id === wordId)) {
+      const profile = Store.getCurrentProfile();
+      const currentUnit = profile.settings.current_unit || 1;
+      const data = await this.loadWords(currentUnit);
+      App._currentQueue = App.getPriorityQueue(data, App._lastAllUnits, profile);
+    }
 
     const steps = ['听音', '跟读', '分段', '归位', '找特位', '合成', '主动回忆', '听写前跟读', '听写'];
     /* D010：复习词走 3 步快速通道（听音→主动回忆→听写），跳过精细加工 */
@@ -510,23 +649,50 @@ const App = {
     `;
   },
 
+  /* 第 9 步"听写门控"——不再是单词级听写入口
+   * 改为：本词学完 → 跳到下一个词 / 全部学完后跳批量听写
+   * 听写由用户在全部词学完后手动从"今日计划"页或首页进入
+   * D008 兼容性：key 词仍会出现在批量听写队列里 */
   stepDictationGate(root, word) {
     Store.recordStudyLog({ word_id: word.id, word: word.word, study_type: word._studyType || 'new' });
     const isKey = word.importance === 'key';
+    const queue = App._currentQueue || [];
+    const idx = queue.findIndex(w => w.id === word.id);
+    const isLast = idx === -1 || idx >= queue.length - 1;
+    const next = isLast ? null : queue[idx + 1];
+
+    let primaryBtn, primaryLink, primaryLabel, ghostBtn, ghostLink, ghostLabel;
+    if (isLast) {
+      primaryLabel = '全部学完！进入听写 ✍️';
+      primaryLink = `/dictation-batch/${Store.getCurrentProfile().settings.current_unit || 1}`;
+    } else {
+      primaryLabel = `下一个：${next.word} →`;
+      primaryLink = `/card/${next.id}`;
+    }
+    ghostLabel = '返回首页';
+    ghostLink = '/';
+
     root.innerHTML = `
       <div class="card">
-        <div class="card-title">第 9 步｜听写 ✍️</div>
-        ${isKey
-          ? '<p class="card-subtitle">准备好笔和作业本。屏幕不会显示单词。⭐ 必会词必听写</p>'
-          : '<p class="card-subtitle">这是「了解词」，可以跳过听写。能认出来即可，不强求默写。</p>'}
-        <div class="dictation-tip">
-          🎧 系统会朗读单词<br>
-          1️⃣ 先连读整词<br>
-          2️⃣ 停顿后慢速分段<br>
-          3️⃣ 写完后点"写完了"
-        </div>
-        <button class="btn btn-block" data-link="/dictation/${word.id}" style="margin-top:16px">${isKey ? '开始听写 →' : '（可选）还是听写一下'}</button>
-        <button class="btn btn-ghost btn-block" data-link="/" style="margin-top:8px">${isKey ? '跳过，先返回' : '直接返回 ✅'}</button>
+        <div class="card-title">🎉 1 个单词学完！</div>
+        <p class="card-subtitle">
+          ${isKey
+            ? '⭐ 必会词 — 听写环节在<strong>全部学完后统一进行</strong>。'
+            : '了解词 — 听写不是强制的，但你也可以在批量听写里挑战自己。'}
+        </p>
+        ${isLast ? `
+          <div class="notice" style="background:#e8f5e9;border-left-color:var(--c-success);color:#1b5e20">
+            🎉 <strong>今日计划全部完成！</strong><br>
+            <span style="font-size:13px">现在统一听写 ${word.importance === 'key' ? '必会词' : '今日所有词'}。</span>
+          </div>
+        ` : `
+          <div class="word-list" style="margin:12px 0">
+            <li><span>本次学完</span><span class="badge master">${idx + 1} / ${queue.length}</span></li>
+            <li><span>下一个</span><span class="word-text" style="font-size:14px">${next.word}</span></li>
+          </div>
+        `}
+        <button class="btn btn-block" data-link="${primaryLink}" style="margin-top:16px">${primaryLabel}</button>
+        <button class="btn btn-ghost btn-block" data-link="${ghostLink}" style="margin-top:8px">${ghostLabel}</button>
       </div>
     `;
   },
