@@ -109,8 +109,6 @@ const App = {
     TTS.stop();
     if (hash === '/' || hash === '') {
       this.renderHome(app);
-    } else if (hash === '/today') {
-      this.renderToday(app);
     } else if (hash.startsWith('/card/')) {
       this.currentWordId = hash.split('/')[2];
       this.renderCard(app, this.currentWordId);
@@ -144,19 +142,63 @@ const App = {
     const profile = Store.getCurrentProfile();
     const currentUnit = profile.settings.current_unit || 1;
     const data = await this.loadWords(currentUnit);
-    const today = this.getPriorityQueue(data, await this.loadAllUnits(), profile);
+    const all = await this.loadAllUnits();
+    const today = this.getPriorityQueue(data, all, profile);
 
     const unitName = data.meta?.unit || `Unit ${currentUnit}`;
+    const unitTotal = data.words.length;
+    const newCount = today.filter(w => w._studyType !== 'review').length;
+    const reviewCount = today.length - newCount;
+    const minutes = today.length * 3;
+    const completed = profile._todayCompleted || 0;
     const isFirstSession = !localStorage.getItem('wordcoach.firstrun.seen');
+    const nextLink = today.length > 0 ? `/card/${today[completed]?.id || today[0].id}` : `/record`;
 
     root.innerHTML = `
       <div class="home-hero">
         <div class="home-logo">🦊</div>
         <div class="home-title">单词记忆教练</div>
-        <div class="home-today">今日 · ${today.length} 词</div>
-        <button class="btn home-cta" data-link="/today">开始学习 🚀</button>
+
+        <div class="home-plan-card">
+          <div class="home-plan-head">
+            <div class="home-plan-unit">${unitName} <span class="home-plan-unit-id">(${currentUnit}/10)</span></div>
+            <div class="home-plan-count">
+              🆕 <strong>${newCount}</strong> 新词
+              ${reviewCount > 0 ? `· 🔁 <strong>${reviewCount}</strong> 复习` : ''}
+            </div>
+            <div class="home-plan-time">⏱ 预计 ${minutes} 分钟</div>
+          </div>
+
+          <div class="home-plan-list-title">📝 今日计划</div>
+          <ul class="home-plan-list">
+            ${today.map((w, i) => {
+              const done = i < completed;
+              return `
+                <li class="home-plan-item ${done ? 'done' : ''}">
+                  <span class="home-plan-num">${i + 1}</span>
+                  <span class="home-plan-word">
+                    ${w.word}
+                    ${w._studyType === 'review' ? '<span class="home-plan-badge review">🔁</span>' : ''}
+                    ${w.importance === 'key' ? '<span class="home-plan-badge key">⭐</span>' : ''}
+                  </span>
+                  <span class="home-plan-meaning">${w.meaning_zh}</span>
+                  ${done ? '<span class="home-plan-check">✓</span>' : ''}
+                </li>
+              `;
+            }).join('')}
+          </ul>
+        </div>
+
+        ${today.length > 0 ? `
+          <button class="btn home-cta" data-link="${nextLink}">
+            ${completed > 0 ? `继续学习 (${completed}/${today.length}) 🚀` : '开始第 1 词 🚀'}
+          </button>
+        ` : `
+          <button class="btn home-cta" data-link="/record">🎉 今日学完！查看记录</button>
+        `}
+
         <div class="home-subline" data-action="openUnitSheet" data-role="switcher">
-          ${isFirstSession ? '👋 第一次用？点这里选学校当前单元' : `当前：${unitName} (${currentUnit}/10) · 点此切换 →`}
+          ${isFirstSession ? '👋 第一次用？点这里选学校当前单元' : `切换单元 → ${unitName} (${currentUnit}/10)`}
         </div>
       </div>
     `;

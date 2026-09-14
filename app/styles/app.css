@@ -980,3 +980,105 @@ a { color: var(--c-primary-dark); text-decoration: none; }
   color: var(--c-text-soft, #aaa) !important;
   font-weight: 400 !important;
 }
+
+/* ============ 首页合并：今日计划嵌进首页 ============ */
+.home-plan-card {
+  width: 100%;
+  max-width: 480px;
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  margin: 4px 0 4px 0;
+}
+.home-plan-head {
+  padding: 14px 16px 12px;
+  background: linear-gradient(135deg, #fff5e8 0%, #ffeed8 100%);
+  border-bottom: 1px solid #f0e9d8;
+}
+.home-plan-unit {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--c-text);
+  margin-bottom: 4px;
+}
+.home-plan-unit-id {
+  font-size: 12px;
+  color: var(--c-text-soft, #8a7e6b);
+  font-weight: 500;
+}
+.home-plan-count {
+  font-size: 14px;
+  color: var(--c-text);
+  margin-bottom: 2px;
+  font-weight: 500;
+}
+.home-plan-count strong {
+  color: var(--c-primary);
+  font-size: 17px;
+  font-weight: 800;
+}
+.home-plan-time {
+  font-size: 12px;
+  color: var(--c-text-soft, #8a7e6b);
+}
+.home-plan-list-title {
+  padding: 10px 16px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--c-text-soft, #8a7e6b);
+  background: #faf6ee;
+  border-bottom: 1px solid #f0e9d8;
+  letter-spacing: 1px;
+}
+.home-plan-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.home-plan-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 16px;
+  border-bottom: 1px solid #f5f0e8;
+}
+.home-plan-item:last-child { border-bottom: none; }
+.home-plan-item.done {
+  background: #f8fdf5;
+}
+.home-plan-num {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--c-text-soft, #aaa);
+  min-width: 18px;
+}
+.home-plan-item.done .home-plan-num { color: var(--c-success); }
+.home-plan-word {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--c-text);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.home-plan-meaning {
+  font-size: 12px;
+  color: var(--c-text-soft, #8a7e6b);
+  margin-left: auto;
+  text-align: right;
+}
+.home-plan-item.done .home-plan-word {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+.home-plan-check {
+  color: var(--c-success);
+  font-weight: 800;
+  font-size: 16px;
+}
+.home-plan-badge {
+  font-size: 10px;
+}
+.home-plan-badge.review { color: #f39c12; }
+.home-plan-badge.key { color: var(--c-primary); }
