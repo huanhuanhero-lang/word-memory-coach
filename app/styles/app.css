@@ -604,3 +604,100 @@ a { color: var(--c-primary-dark); text-decoration: none; }
   accent-color: var(--c-primary);
   cursor: pointer;
 }
+
+/* ============ 极简首页（D013 v0.6.2） ============ */
+.home-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 70vh;
+  padding: 60px 20px 100px;
+  text-align: center;
+  gap: 16px;
+}
+.home-logo {
+  font-size: 64px;
+  line-height: 1;
+  margin-bottom: 8px;
+  animation: float 3s ease-in-out infinite;
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+.home-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--c-text);
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+.home-today {
+  font-size: 16px;
+  color: var(--c-text-soft, #8a7e6b);
+  margin-bottom: 24px;
+  font-weight: 500;
+}
+.btn.home-cta {
+  min-width: 220px;
+  padding: 16px 32px;
+  font-size: 17px;
+  font-weight: 700;
+  border-radius: 28px;
+  background: linear-gradient(135deg, var(--c-primary), var(--c-primary-dark));
+  box-shadow: 0 8px 24px rgba(255, 140, 66, 0.35);
+  transition: transform 0.2s, box-shadow 0.2s;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+.btn.home-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(255, 140, 66, 0.45);
+}
+.btn.home-cta:active { transform: translateY(0); }
+.home-subline {
+  font-size: 13px;
+  color: var(--c-text-soft, #aaa);
+  margin-top: 16px;
+  letter-spacing: 0.5px;
+}
+
+/* ============ 底部 4 tab（纯图标） ============ */
+.bottom-tab {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background: rgba(255, 250, 242, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  padding: 8px 0 calc(8px + env(safe-area-inset-bottom, 0));
+  z-index: 100;
+}
+.bottom-tab-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  padding: 6px 0;
+  text-decoration: none;
+  color: var(--c-text-soft, #aaa);
+  font-size: 10px;
+  gap: 2px;
+  transition: color 0.2s;
+}
+.bottom-tab-item-icon {
+  font-size: 24px;
+  line-height: 1;
+}
+.bottom-tab-item.active { color: var(--c-primary); }
+
+/* 主区给底部 tab 留位置 */
+#app { padding-bottom: 60px; }

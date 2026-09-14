@@ -3,16 +3,33 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>单词记忆教练 · v0.3 MVP</title>
+<title>单词记忆教练 · v0.6.2</title>
 <link rel="stylesheet" href="styles/app.css">
 </head>
 <body>
 
 <div id="app" class="app"></div>
 
+<nav class="bottom-tab" id="bottom-tab">
+  <a class="bottom-tab-item active" data-link="/" href="#/">
+    <span class="bottom-tab-item-icon">🏠</span>
+  </a>
+  <a class="bottom-tab-item" data-link="/wrong" href="#/wrong">
+    <span class="bottom-tab-item-icon">📕</span>
+  </a>
+  <a class="bottom-tab-item" data-link="/record" href="#/record">
+    <span class="bottom-tab-item-icon">📊</span>
+  </a>
+  <a class="bottom-tab-item" data-link="/settings" href="#/settings">
+    <span class="bottom-tab-item-icon">⚙️</span>
+  </a>
+</nav>
+
 <!-- 决策记录：
-  v0.3 验收 D001 听写 / D002 HTML 原型 / D003 数据分层
-  全部数据存在本机 localStorage，零外部请求（除可选字体）
+  v0.6.2 D001 听写 / D002 HTML 原型 / D003 数据分层
+  D007 单元 / D008 重点词 / D009 单语 / D010 复习穿插
+  D011 听写勾选 / D012 听写前跟读 / D013 极简首页
+  全部数据存在本机 localStorage，零外部请求
   打开 index.html 即可使用，建议本地起一个静态服务（python -m http.server 8080）
 -->
 <script src="scripts/storage.js"></script>

@@ -142,83 +142,19 @@ const App = {
   /* ============ 首页 ============ */
   async renderHome(root) {
     const profile = Store.getCurrentProfile();
-    const seen = profile.words_state || {};
     const currentUnit = profile.settings.current_unit || 1;
     const data = await this.loadWords(currentUnit);
-    const all = await this.loadAllUnits();
-    const stats = Store.getStats();
-
-    /* D010：今日队列用 priority 队列（生词+复习词穿插，复习 ≤ 2 词） */
-    const today = this.getPriorityQueue(data, all, profile);
+    const today = this.getPriorityQueue(data, await this.loadAllUnits(), profile);
 
     const unitName = data.meta?.unit || `Unit ${currentUnit}`;
-    const unitTotal = data.words.length;
-    const unitLearned = data.words.filter(w => seen[w.id]).length;
-    const reviewCount = today.filter(w => w._studyType === 'review').length;
-    const newCount = today.length - reviewCount;
-
-    const isFirstSession = !localStorage.getItem('wordcoach.firstrun.seen');
-    const dictQueue = this.getDictationQueue(data, profile, 5);
-    const hasDictationReady = dictQueue.length > 0;
 
     root.innerHTML = `
-      <div class="app-header">
-        <div class="app-title">🦊 单词记忆教练</div>
-        <div class="app-profile" data-action="openProfileSwitcher">👤 ${profile.name}</div>
-      </div>
-
-      <div class="card">
-        <div class="card-title">📚 今日挑战</div>
-        ${today.length === 0 ? `
-          <div class="notice" style="background:#e8f5e9;border-left-color:var(--c-success);color:#1b5e20">
-            🎉 <strong>${unitName}</strong> 全部学完啦！<br>
-            <span style="font-size:13px">可以去「错词本」巩固，或在下方切到学校下一单元继续。</span>
-          </div>
-        ` : `
-          <div class="card-subtitle">${unitName} · 第 ${unitLearned + 1} / ${unitTotal} 词 · 今日 ${today.length} 个（${newCount} 新 ${reviewCount > 0 ? `+ ${reviewCount} 🔁复习` : ''}），预计 ${today.length * 3} 分钟</div>
-          <button class="btn btn-block" data-link="/today">查看今日计划 →</button>
-        `}
-        ${hasDictationReady ? `
-          <button class="btn btn-ghost btn-block" data-link="/dictation-batch/${currentUnit}" style="margin-top:8px">✍️ 今日听写（${dictQueue.length} 个 ⭐必会词）</button>
-        ` : ''}
-      </div>
-
-      <div class="card">
-        <div class="card-title">📖 切换单元</div>
-        ${isFirstSession ? `
-          <p class="card-subtitle" style="color:var(--c-primary-dark);font-weight:600">
-            👋 第一次用？告诉我你家孩子<strong>学校当前学到</strong>第几单元 👇
-          </p>
-        ` : `
-          <p class="card-subtitle">点击切换到学校当前在学的单元（可手动调整）</p>
-        `}
-        <div class="unit-grid">
-          ${this.UNIT_IDS.map(id => {
-            const isCurrent = id === currentUnit;
-            return `<button class="unit-chip ${isCurrent ? 'active' : ''}" data-action="switchUnit" data-unit="${id}">${id <= 3 ? 'Starter U' + id : 'Unit ' + (id - 3)}</button>`;
-          }).join('')}
-        </div>
-        <p class="card-subtitle" style="margin-top:8px;font-size:12px">当前：<strong>${unitName}</strong></p>
-      </div>
-
-      <div class="card">
-        <div class="card-title">📊 学习情况</div>
-        <div class="word-list">
-          <li><span>已学单词</span><span class="badge master">${stats.total}</span></li>
-          <li><span>已掌握</span><span class="badge master">${stats.mastered}</span></li>
-          <li><span>听写错词</span><span class="badge dictation-err">${stats.dictationErrors}</span></li>
-          <li><span>今日新词 / 复习</span><span class="badge">${stats.newToday} / ${stats.reviewToday} 🔁</span></li>
-          <li><span>学习次数</span><span class="badge">${stats.studyCount}</span></li>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-title">🧰 功能</div>
-        <div class="word-list">
-          <li><span>📕 错词本</span><span><a data-link="/wrong">查看 →</a></span></li>
-          <li><span>📈 学习记录</span><span><a data-link="/record">查看 →</a></span></li>
-          <li><span>⚙️ 家长配置</span><span><a data-link="/settings">设置 →</a></span></li>
-        </div>
+      <div class="home-hero">
+        <div class="home-logo">🦊</div>
+        <div class="home-title">单词记忆教练</div>
+        <div class="home-today">今日 · ${today.length} 词</div>
+        <button class="btn home-cta" data-link="/today">开始学习 🚀</button>
+        <div class="home-subline">当前：${unitName} (${currentUnit}/10)</div>
       </div>
     `;
   },
