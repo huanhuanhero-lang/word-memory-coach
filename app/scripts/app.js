@@ -147,6 +147,7 @@ const App = {
     const today = this.getPriorityQueue(data, await this.loadAllUnits(), profile);
 
     const unitName = data.meta?.unit || `Unit ${currentUnit}`;
+    const isFirstSession = !localStorage.getItem('wordcoach.firstrun.seen');
 
     root.innerHTML = `
       <div class="home-hero">
@@ -154,9 +155,43 @@ const App = {
         <div class="home-title">单词记忆教练</div>
         <div class="home-today">今日 · ${today.length} 词</div>
         <button class="btn home-cta" data-link="/today">开始学习 🚀</button>
-        <div class="home-subline">当前：${unitName} (${currentUnit}/10)</div>
+        <div class="home-subline" data-action="openUnitSheet" data-role="switcher">
+          ${isFirstSession ? '👋 第一次用？点这里选学校当前单元' : `当前：${unitName} (${currentUnit}/10) · 点此切换 →`}
+        </div>
       </div>
     `;
+  },
+
+  /* 单元切换 Sheet：从底部弹出，10 单元点选 */
+  async openUnitSheet() {
+    const profile = Store.getCurrentProfile();
+    const currentUnit = profile.settings.current_unit || 1;
+    const all = await this.loadAllUnits();
+
+    const unitCards = this.UNIT_IDS.map(id => {
+      const data = all[id];
+      const isCurrent = id === currentUnit;
+      const name = data?.meta?.unit || (id <= 3 ? `Starter U${id}` : `Unit ${id - 3}`);
+      return `
+        <button class="unit-sheet-item ${isCurrent ? 'active' : ''}"
+                data-action="switchUnitFromSheet" data-unit="${id}">
+          <div class="unit-sheet-num">${id}</div>
+          <div class="unit-sheet-name">${name}</div>
+          ${isCurrent ? '<div class="unit-sheet-badge">当前</div>' : ''}
+        </button>
+      `;
+    }).join('');
+
+    this.showModal({
+      title: '📖 选择单元',
+      body: `
+        <p class="modal-sub">点选学校当前正在学的单元（家长可随时调整）</p>
+        <div class="unit-sheet-grid">${unitCards}</div>
+      `,
+      actions: [
+        { text: '关闭', primary: false, onClick: () => this.closeModal() }
+      ]
+    });
   },
 
   /* ============ 今日计划页 ============
@@ -929,6 +964,25 @@ const App = {
   /* ============ 通用动作 ============ */
   actions: {
     nextStep() { window._nextStep && window._nextStep(); },
+
+    /* 单元切换入口（首页"当前单元"行可点） */
+    openUnitSheet() {
+      App.openUnitSheet();
+    },
+
+    /* Sheet 选单元 */
+    switchUnitFromSheet(el) {
+      const unit = parseInt(el.getAttribute('data-unit'));
+      if (!unit) return;
+      Store.updateCurrentProfile(p => {
+        p.settings = p.settings || {};
+        p.settings.current_unit = unit;
+        return p;
+      });
+      App.closeModal();
+      App.toast(`已切换到 Unit ${unit}`);
+      App.render();
+    },
 
     /* D012：听写前跟读 —— TTS 慢速 + 3 秒跟读倒计时 */
     startPreDictationFollow() {
