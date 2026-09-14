@@ -953,3 +953,30 @@ a { color: var(--c-primary-dark); text-decoration: none; }
 }
 .today-badge.review { color: var(--c-warn, #f39c12); }
 .today-badge.key { color: var(--c-primary); }
+
+/* today-hero 完整计划版 */
+.today-meta-plan {
+  font-size: 15px !important;
+  font-weight: 600;
+  color: var(--c-text) !important;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.today-meta-plan strong {
+  font-size: 18px;
+  color: var(--c-primary);
+}
+.today-meta-review strong {
+  color: var(--c-warn, #f39c12);
+}
+.today-meta-divider {
+  color: var(--c-text-soft, #aaa);
+  font-weight: 400;
+}
+.today-meta-hint {
+  font-size: 12px !important;
+  color: var(--c-text-soft, #aaa) !important;
+  font-weight: 400 !important;
+}

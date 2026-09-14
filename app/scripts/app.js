@@ -245,10 +245,12 @@ const App = {
         </div>
         <div class="today-meta">
           <div class="today-meta-row">${unitName}</div>
-          <div class="today-meta-row today-meta-split">
-            <span>🆕 ${newCount} 新词</span>
-            ${reviewCount > 0 ? `<span>🔁 ${reviewCount} 复习</span>` : ''}
-            <span>⏱ ${minutes} 分钟</span>
+          <div class="today-meta-row today-meta-plan">
+            🆕 <strong>${newCount}</strong> 新词
+            ${reviewCount > 0 ? `<span class="today-meta-divider">·</span><span class="today-meta-review">🔁 <strong>${reviewCount}</strong> 复习</span>` : ''}
+          </div>
+          <div class="today-meta-row today-meta-hint">
+            ⏱ 预计 ${minutes} 分钟 · 复习由错题动态算出
           </div>
         </div>
       </div>
