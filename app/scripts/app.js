@@ -235,45 +235,56 @@ const App = {
         <div class="app-profile" data-link="/">← 返回</div>
       </div>
 
-      <div class="card" style="text-align:center;background:linear-gradient(135deg,#fff5e8 0%,#ffeed8 100%)">
-        <div style="font-size:13px;color:var(--c-text-soft)">${unitName}</div>
-        <div style="font-size:64px;font-weight:800;color:var(--c-primary);line-height:1.1;margin:8px 0">${total}<span style="font-size:24px;color:var(--c-text-soft);font-weight:600"> 个单词</span></div>
-        <div style="display:flex;justify-content:center;gap:24px;font-size:14px;margin-top:8px">
-          <span>🆕 <strong>${newCount}</strong> 新词</span>
-          ${reviewCount > 0 ? `<span>🔁 <strong>${reviewCount}</strong> 复习</span>` : ''}
-          <span>⏱ <strong>${minutes}</strong> 分钟</span>
+      <!-- 今日进度（百词斩式顶部卡片） -->
+      <div class="today-hero">
+        <div class="today-progress">
+          <span class="today-progress-num">${profile._todayCompleted || 0}</span>
+          <span class="today-progress-divider">/</span>
+          <span class="today-progress-total">${total}</span>
+          <div class="today-progress-label">今日已完成</div>
+        </div>
+        <div class="today-meta">
+          <div class="today-meta-row">${unitName}</div>
+          <div class="today-meta-row today-meta-split">
+            <span>🆕 ${newCount} 新词</span>
+            ${reviewCount > 0 ? `<span>🔁 ${reviewCount} 复习</span>` : ''}
+            <span>⏱ ${minutes} 分钟</span>
+          </div>
         </div>
       </div>
 
-      <div class="card">
-        <div class="card-title">📝 今天要学的词</div>
-        <p class="card-subtitle">按计划一个个学，每个词走完 9 步教练流程。学完后统一听写。</p>
-        <div class="word-list">
-          ${today.map((w, i) => `
-            <li>
-              <span>
-                <span class="word-text">${i + 1}. ${w.word}</span>
-                ${w._studyType === 'review'
-                  ? '<span class="review-badge" style="margin-left:6px">🔁 复习</span>'
-                  : (w.importance === 'key'
-                      ? '<span class="importance-badge key" style="margin-left:6px">⭐</span>'
-                      : '<span class="importance-badge normal" style="margin-left:6px">·</span>')}
-              </span>
-              <span class="word-meta">${w.meaning_zh}</span>
-            </li>
-          `).join('')}
-        </div>
-      </div>
+      <!-- 主 CTA -->
+      <button class="btn btn-cta-primary" data-link="/card/${today[0].id}">
+        ${(profile._todayCompleted || 0) > 0 ? '继续学习 🚀' : '开始第 1 词 🚀'}
+      </button>
 
-      <button class="btn btn-block" data-link="/card/${today[0].id}">开始学习第 1 个 🚀</button>
-
-      ${dictQueue.length > 0 ? `
-        <div class="card" style="margin-top:16px;text-align:center">
-          <div class="card-title" style="font-size:14px">✍️ 学完统一听写</div>
-          <p class="card-subtitle">${dictQueue.length} 个 ⭐必会词已就绪。听写在全部单词学完后进行。</p>
-          <button class="btn btn-ghost" data-link="/dictation-batch/${currentUnit}">提前开始听写</button>
-        </div>
+      ${dictQueue.length > 0 && (profile._todayCompleted || 0) >= total ? `
+        <button class="btn btn-cta-secondary" data-link="/dictation-batch/${currentUnit}">
+          ✍️ 开始今日听写（${dictQueue.length} 个 ⭐）
+        </button>
       ` : ''}
+
+      <!-- 词清单（紧凑） -->
+      <div class="today-list">
+        <div class="today-list-title">📝 今天要学的 ${total} 个词</div>
+        <ul class="today-list-items">
+          ${today.map((w, i) => {
+            const completed = i < (profile._todayCompleted || 0);
+            return `
+              <li class="today-list-item ${completed ? 'completed' : ''}">
+                <span class="today-list-num">${i + 1}</span>
+                <span class="today-list-word">
+                  ${w.word}
+                  ${w._studyType === 'review' ? '<span class="today-badge review">🔁</span>' : ''}
+                  ${w.importance === 'key' ? '<span class="today-badge key">⭐</span>' : ''}
+                </span>
+                <span class="today-list-meaning">${w.meaning_zh}</span>
+                ${completed ? '<span class="today-list-check">✓</span>' : ''}
+              </li>
+            `;
+          }).join('')}
+        </ul>
+      </div>
     `;
   },
 
