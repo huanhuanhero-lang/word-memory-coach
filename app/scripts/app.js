@@ -146,13 +146,10 @@ const App = {
     const today = this.getPriorityQueue(data, all, profile);
 
     const unitName = data.meta?.unit || `Unit ${currentUnit}`;
-    const unitTotal = data.words.length;
     const newCount = today.filter(w => w._studyType !== 'review').length;
     const reviewCount = today.length - newCount;
     const minutes = today.length * 3;
-    const completed = profile._todayCompleted || 0;
     const isFirstSession = !localStorage.getItem('wordcoach.firstrun.seen');
-    const nextLink = today.length > 0 ? `/card/${today[completed]?.id || today[0].id}` : `/record`;
 
     root.innerHTML = `
       <div class="home-hero">
@@ -160,39 +157,16 @@ const App = {
         <div class="home-title">单词记忆教练</div>
 
         <div class="home-plan-card">
-          <div class="home-plan-head">
-            <div class="home-plan-unit">${unitName} <span class="home-plan-unit-id">(${currentUnit}/10)</span></div>
-            <div class="home-plan-count">
-              🆕 <strong>${newCount}</strong> 新词
-              ${reviewCount > 0 ? `· 🔁 <strong>${reviewCount}</strong> 复习` : ''}
-            </div>
-            <div class="home-plan-time">⏱ 预计 ${minutes} 分钟</div>
+          <div class="home-plan-unit">${unitName} <span class="home-plan-unit-id">(${currentUnit}/10)</span></div>
+          <div class="home-plan-count">
+            🆕 <strong>${newCount}</strong> 新词
+            ${reviewCount > 0 ? `<span class="home-plan-dot">·</span>🔁 <strong>${reviewCount}</strong> 复习` : ''}
           </div>
-
-          <div class="home-plan-list-title">📝 今日计划</div>
-          <ul class="home-plan-list">
-            ${today.map((w, i) => {
-              const done = i < completed;
-              return `
-                <li class="home-plan-item ${done ? 'done' : ''}">
-                  <span class="home-plan-num">${i + 1}</span>
-                  <span class="home-plan-word">
-                    ${w.word}
-                    ${w._studyType === 'review' ? '<span class="home-plan-badge review">🔁</span>' : ''}
-                    ${w.importance === 'key' ? '<span class="home-plan-badge key">⭐</span>' : ''}
-                  </span>
-                  <span class="home-plan-meaning">${w.meaning_zh}</span>
-                  ${done ? '<span class="home-plan-check">✓</span>' : ''}
-                </li>
-              `;
-            }).join('')}
-          </ul>
+          <div class="home-plan-time">⏱ 预计 ${minutes} 分钟</div>
         </div>
 
         ${today.length > 0 ? `
-          <button class="btn home-cta" data-link="${nextLink}">
-            ${completed > 0 ? `继续学习 (${completed}/${today.length}) 🚀` : '开始第 1 词 🚀'}
-          </button>
+          <button class="btn home-cta" data-link="/card/${today[0].id}">开始学习 🚀</button>
         ` : `
           <button class="btn home-cta" data-link="/record">🎉 今日学完！查看记录</button>
         `}
@@ -419,36 +393,33 @@ const App = {
     this._viewedWord = word;
     this._dictWord = null;
 
-    /* 用 today 队列填充 _currentQueue，让 stepDictationGate 知道下一个词是谁 */
-    if (!App._currentQueue || !App._currentQueue.find(w => w.id === wordId)) {
-      const profile = Store.getCurrentProfile();
-      const currentUnit = profile.settings.current_unit || 1;
-      const data = await this.loadWords(currentUnit);
-      App._currentQueue = App.getPriorityQueue(data, App._lastAllUnits, profile);
-    }
-
-    const steps = ['听音', '跟读', '分段', '归位', '找特位', '合成', '主动回忆', '听写前跟读', '听写'];
-    /* D010：复习词走 3 步快速通道（听音→主动回忆→听写），跳过精细加工 */
+    /* D014：精简为 3 步核心流程（听音→拼读→主动回忆）
+       听写不再在单词级，统一在学完所有词后批量进行 */
+    const steps = ['听音', '拼读', '主动回忆'];
     const isReview = word._studyType === 'review';
-    if (isReview) {
-      steps.length = 0;
-      steps.push('听音', '主动回忆', '听写前跟读', '听写');
-    }
     /* D008：importance 角标 */
     const isKey = word.importance === 'key';
     const importanceBadge = isKey
       ? '<span class="importance-badge key">⭐ 必会</span>'
       : '<span class="importance-badge normal">· 了解</span>';
     const reviewBadge = isReview
-      ? '<span class="review-badge">🔁 复习（快速通道）</span>'
+      ? '<span class="review-badge">🔁 复习</span>'
       : '';
-    const channelTip = isReview
-      ? '<span class="importance-tip">跳过跟读/分段/归位/找特位/合成，直接检测记忆</span>'
-      : (isKey ? '<span class="importance-tip">本词将进入听写环节</span>' : '<span class="importance-tip">本词只走 7 步，跳过听写</span>');
+    const channelTip = isKey
+      ? '<span class="importance-tip">本词是必会词，学完后会进入统一听写</span>'
+      : '<span class="importance-tip">本词只走 3 步，跳过听写</span>';
     root.innerHTML = `
       <div class="app-header">
         <div class="app-title">记忆教练卡</div>
         <div class="app-profile" data-link="/">← 返回</div>
+      </div>
+
+      <div class="card-progress">
+        <span class="card-progress-num" id="card-progress-num">1 / ${App._currentQueue?.length || 5}</span>
+        <div class="card-progress-bar">
+          <div class="card-progress-fill" id="card-progress-fill" style="width: ${((App._currentQueue?.findIndex(w => w.id === wordId) ?? 0) + 1) / (App._currentQueue?.length || 5) * 100}%"></div>
+        </div>
+        <span class="card-progress-word" style="font-size:11px;color:var(--c-text-soft,#aaa)">${word.word}</span>
       </div>
 
       <div class="importance-row">${reviewBadge} ${importanceBadge} ${channelTip}</div>
@@ -468,33 +439,21 @@ const App = {
         if (i === idx) el.classList.add('active');
       });
       const c = document.getElementById('step-content');
-      /* D010/D012：handler 数组按当前 steps（生词 9 步 / 复习 4 步）动态映射 */
+      /* D014：3 步核心流程（听音→拼读→主动回忆） */
       const handlers = [
         () => this.stepHear(c, word),
-        () => this.stepFollow(c, word),
-        () => this.stepSyllable(c, word),
-        () => this.stepPhoneme(c, word),
-        () => this.stepSpecial(c, word),
-        () => this.stepCombine(c, word),
-        () => this.stepRecall(c, word),
-        () => this.stepPreDictationFollow(c, word),
-        () => this.stepDictationGate(c, word)
+        () => this.stepSpell(c, word),
+        () => this.stepRecall(c, word)
       ];
-      /* 复习词用快速通道映射（4 步） */
-      const reviewHandlers = [
-        () => this.stepHear(c, word),
-        () => this.stepRecall(c, word),
-        () => this.stepPreDictationFollow(c, word),
-        () => this.stepDictationGate(c, word)
-      ];
-      (isReview ? reviewHandlers : handlers)[idx]();
+      handlers[idx]();
     };
     window._nextStep = () => {
       if (currentStep < steps.length - 1) {
         currentStep++;
         renderStep(currentStep);
       } else {
-        location.hash = '/';
+        /* D014：最后一个步骤（主动回忆）完成后 → 跳到下一个词或批量听写 */
+        this.afterWordDone(word);
       }
     };
     renderStep(0);
@@ -522,120 +481,55 @@ const App = {
     `;
   },
 
-  stepFollow(root, word) {
-    const repeat = Store.getCurrentProfile().settings.repeat || {};
-    const followN = repeat.follow || 2;
+  /* D014：拼读 1 屏搞定（原分段+归位+找特位+合成 4 步合并）
+     保留：音节可视化 + 跟读 1 次 + 缺字母填空（生成效应） */
+  stepSpell(root, word) {
+    const syll = word.syllables || [];
+    /* 把单词里的几个字母藏起来，提示位置（生成效应） */
+    const w = word.word;
+    const hideCount = Math.min(2, Math.floor(w.length / 4));
+    const positions = [];
+    const indices = [...Array(w.length).keys()];
+    for (let i = 0; i < hideCount; i++) {
+      const idx = indices.splice(Math.floor(Math.random() * indices.length), 1)[0];
+      positions.push(idx);
+    }
+    const masked = w.split('').map((c, i) => positions.includes(i) ? '_' : c).join('');
     root.innerHTML = `
       <div class="card">
-        <div class="card-title">第 2 步｜跟读</div>
-        <div class="word-hero">
-          <div class="word">${word.word}</div>
-          <div class="meaning">${word.meaning_zh}</div>
+        <div class="card-title">第 2 步｜拼读</div>
+        <p class="card-subtitle">看音节、跟读、然后补全缺的字母。</p>
+
+        <div style="text-align:center;margin:16px 0 8px">
+          ${syll.map(s => `<span class="syllable-chip">${s}</span>`).join('<span class="syllable-dot">·</span>')}
         </div>
+        <div style="text-align:center;font-size:13px;color:var(--c-text-soft);margin-bottom:12px">
+          ${syll.length} 个音节 · ${w.length} 个字母
+        </div>
+
         <div class="dictation-controls">
-          <button class="btn" data-action="playWord" data-kind="follow">🔊 跟读 ${followN > 1 ? `<span class="badge-times">× ${followN}</span>` : ''}</button>
+          <button class="btn" data-action="playSyllableLoop">🎤 跟读 1 次</button>
+          <button class="btn btn-ghost" data-action="playWord" data-kind="ear">🔊 再听单词</button>
         </div>
-        <p class="dictation-tip" style="margin-top:16px">大声跟读，注意嘴型和重音位置。${followN > 1 ? '本词会自动播 ' + followN + ' 遍，第 2 遍开始跟读。' : ''}</p>
-        <button class="btn btn-block" data-action="nextStep" style="margin-top:16px">跟读完成，下一步 →</button>
-      </div>
-    `;
-  },
 
-  stepSyllable(root, word) {
-    const repeat = Store.getCurrentProfile().settings.repeat || {};
-    const syllableN = repeat.syllable || 1;
-    root.innerHTML = `
-      <div class="card">
-        <div class="card-title">第 3 步｜分段</div>
-        <p class="card-subtitle">把单词拆成几段来记。点击每段听发音。</p>
-        <div class="word-hero">
-          <div class="word" style="font-size:32px">${word.word}</div>
+        <div style="margin:20px 0 8px;text-align:center;font-size:13px;color:var(--c-text-soft)">
+          缺的字母：<span style="font-family:monospace;font-size:18px;color:var(--c-primary);letter-spacing:2px">${masked}</span>
         </div>
-        <div class="syllables" id="syllables">
-          ${word.syllables.map((s, i) => `<div class="syllable" data-idx="${i}">${s}</div>`).join('')}
-        </div>
+        <input class="recall-input" id="spell-input" placeholder="补全完整拼写..." autocomplete="off" spellcheck="false" style="text-align:center;font-size:18px;letter-spacing:2px">
         <div class="dictation-controls">
-          <button class="btn" data-action="playSyllableLoop">▶️ 逐段播放 ${syllableN > 1 ? `<span class="badge-times">× ${syllableN}</span>` : ''}</button>
+          <button class="btn" data-action="checkSpell">✅ 提交拼写</button>
+          <button class="btn btn-ghost" data-action="revealSpell">💡 显示答案</button>
         </div>
-        <p class="dictation-tip" style="margin-top:12px">点击单个段可重复听那一段。</p>
-        <button class="btn btn-block" data-action="nextStep" style="margin-top:16px">分段记住，下一步 →</button>
+        <div id="spell-feedback"></div>
       </div>
     `;
-    root.querySelectorAll('.syllable').forEach(el => {
-      el.addEventListener('click', () => {
-        root.querySelectorAll('.syllable').forEach(s => s.classList.remove('playing'));
-        el.classList.add('playing');
-        const gender = (Store.getCurrentProfile().settings || {}).tts_gender || 'female';
-        TTS.speak(word.syllables[+el.dataset.idx], { rate: 0.65, lang: 'en', gender });
-        setTimeout(() => el.classList.remove('playing'), 1000);
-      });
-    });
-  },
-
-  stepPhoneme(root, word) {
-    root.innerHTML = `
-      <div class="card">
-        <div class="card-title">第 4 步｜音形对应（归位）</div>
-        <p class="card-subtitle">每段声音对应哪些字母？</p>
-        ${word.phoneme_map.map(p => `
-          <div style="margin-bottom:12px">
-            <div class="phoneme-row">
-              <div class="phoneme">
-                <div class="letters">${p.letters}</div>
-                <div class="sound">${p.sound}</div>
-              </div>
-            </div>
-            <p style="font-size:13px;color:var(--c-text-soft);text-align:center;margin-top:4px">${p.tip}</p>
-          </div>
-        `).join('')}
-        <button class="btn btn-block" data-action="nextStep" style="margin-top:16px">记住了，下一步 →</button>
-      </div>
-    `;
-  },
-
-  stepSpecial(root, word) {
-    root.innerHTML = `
-      <div class="card">
-        <div class="card-title">第 5 步｜找特位</div>
-        <p class="card-subtitle">这个单词容易写错的地方：</p>
-        ${(word.special || []).map(s => `
-          <div class="special-tip">
-            <strong>[${s.type}]</strong> ${s.text}
-          </div>
-        `).join('') || '<p class="dictation-tip">这个单词没有特别易错的地方。</p>'}
-        <div class="dictation-controls" style="margin-top:16px">
-          <button class="btn btn-ghost" data-action="playSlowWord">🐢 慢速再听</button>
-        </div>
-        <button class="btn btn-block" data-action="nextStep" style="margin-top:16px">找到特位，下一步 →</button>
-      </div>
-    `;
-  },
-
-  stepCombine(root, word) {
-    const repeat = Store.getCurrentProfile().settings.repeat || {};
-    const combineN = repeat.combine || 2;
-    root.innerHTML = `
-      <div class="card">
-        <div class="card-title">第 6 步｜合成</div>
-        <p class="card-subtitle">把刚才学的字母和声音合起来：</p>
-        <div class="word-hero">
-          <div class="word">${word.word}</div>
-          <div class="ipa">${word.ipa}</div>
-          <div class="meaning">${word.meaning_zh}</div>
-        </div>
-        <div class="dictation-controls">
-          <button class="btn" data-action="playWord" data-kind="combine">🔊 听自己拼 ${combineN > 1 ? `<span class="badge-times">× ${combineN}</span>` : ''}</button>
-        </div>
-        <p class="dictation-tip" style="margin-top:16px">心里默念每个字母对应的声音，然后合起来读一遍。${combineN > 1 ? '本词会播 ' + combineN + ' 遍。' : ''}</p>
-        <button class="btn btn-block" data-action="nextStep" style="margin-top:16px">合成完成，下一步 →</button>
-      </div>
-    `;
+    setTimeout(() => document.getElementById('spell-input')?.focus(), 100);
   },
 
   stepRecall(root, word) {
     root.innerHTML = `
       <div class="card">
-        <div class="card-title">第 7 步｜主动回忆</div>
+        <div class="card-title">第 3 步｜主动回忆</div>
         <p class="card-subtitle">盖住答案，凭记忆拼写：</p>
         <div style="text-align:center;font-size:18px;color:var(--c-text-soft);margin:8px 0">
           ${word.meaning_zh}（${word.pos}）
@@ -656,30 +550,10 @@ const App = {
     setTimeout(() => document.getElementById('recall-input').focus(), 100);
   },
 
-  /* D012：听写前跟读 —— 把"音→嘴"和"音→手"绑死 */
-  stepPreDictationFollow(root, word) {
-    const profile = Store.getCurrentProfile();
-    const times = (profile.settings.repeat && profile.settings.repeat.dictation) || 1;
-    root.innerHTML = `
-      <div class="card">
-        <div class="card-title">听写前跟读 🎤</div>
-        <p class="card-subtitle">听慢速朗读 ${times} 次，然后跟读一遍。</p>
-        <div style="text-align:center;font-size:48px;margin:24px 0">${word.word}</div>
-        <div class="dictation-tip" style="text-align:center">
-          🎧 系统会慢速朗读（语速 0.6）<br>
-          🎤 然后你跟读一次
-        </div>
-        <button class="btn btn-block" data-action="startPreDictationFollow" style="margin-top:16px">▶ 开始跟读</button>
-        <div id="pre-dictation-follow-feedback" style="margin-top:12px"></div>
-      </div>
-    `;
-  },
-
-  /* 第 9 步"听写门控"——不再是单词级听写入口
-   * 改为：本词学完 → 跳到下一个词 / 全部学完后跳批量听写
-   * 听写由用户在全部词学完后手动从"今日计划"页或首页进入
-   * D008 兼容性：key 词仍会出现在批量听写队列里 */
-  stepDictationGate(root, word) {
+  /* D014：单词学完后调用（替代原 stepDictationGate 单词级听写）
+     - 记录 study_log
+     - 跳转下一个词，或学完所有词后跳批量听写 */
+  afterWordDone(word) {
     Store.recordStudyLog({ word_id: word.id, word: word.word, study_type: word._studyType || 'new' });
     const isKey = word.importance === 'key';
     const queue = App._currentQueue || [];
@@ -687,40 +561,21 @@ const App = {
     const isLast = idx === -1 || idx >= queue.length - 1;
     const next = isLast ? null : queue[idx + 1];
 
-    let primaryBtn, primaryLink, primaryLabel, ghostBtn, ghostLink, ghostLabel;
+    /* D014：不再渲染单词级听写门控页，直接路由跳转 */
     if (isLast) {
-      primaryLabel = '全部学完！进入听写 ✍️';
-      primaryLink = `/dictation-batch/${Store.getCurrentProfile().settings.current_unit || 1}`;
+      const unitId = Store.getCurrentProfile().settings.current_unit || 1;
+      const unitHas = App._lastAllUnits?.byUnit?.[unitId]?.words
+        ?.filter(w => w.importance === 'key' && (Store.getCurrentProfile().words_state || {})[w.id])
+        .length || 0;
+      if (unitHas > 0) {
+        location.hash = `/dictation-batch/${unitId}`;
+      } else {
+        this.toast('🎉 今日 5 词全部学完！');
+        setTimeout(() => location.hash = '/', 1200);
+      }
     } else {
-      primaryLabel = `下一个：${next.word} →`;
-      primaryLink = `/card/${next.id}`;
+      location.hash = `/card/${next.id}`;
     }
-    ghostLabel = '返回首页';
-    ghostLink = '/';
-
-    root.innerHTML = `
-      <div class="card">
-        <div class="card-title">🎉 1 个单词学完！</div>
-        <p class="card-subtitle">
-          ${isKey
-            ? '⭐ 必会词 — 听写环节在<strong>全部学完后统一进行</strong>。'
-            : '了解词 — 听写不是强制的，但你也可以在批量听写里挑战自己。'}
-        </p>
-        ${isLast ? `
-          <div class="notice" style="background:#e8f5e9;border-left-color:var(--c-success);color:#1b5e20">
-            🎉 <strong>今日计划全部完成！</strong><br>
-            <span style="font-size:13px">现在统一听写 ${word.importance === 'key' ? '必会词' : '今日所有词'}。</span>
-          </div>
-        ` : `
-          <div class="word-list" style="margin:12px 0">
-            <li><span>本次学完</span><span class="badge master">${idx + 1} / ${queue.length}</span></li>
-            <li><span>下一个</span><span class="word-text" style="font-size:14px">${next.word}</span></li>
-          </div>
-        `}
-        <button class="btn btn-block" data-link="${primaryLink}" style="margin-top:16px">${primaryLabel}</button>
-        <button class="btn btn-ghost btn-block" data-link="${ghostLink}" style="margin-top:8px">${ghostLabel}</button>
-      </div>
-    `;
   },
 
   /* ============ 听写页面（D001） ============ */
@@ -1202,6 +1057,31 @@ const App = {
       if (!w) return;
       TTS.stop();
       TTS.playSyllables(w.syllables);
+    },
+
+    revealSpell() {
+      const w = App._viewedWord;
+      if (!w) return;
+      const input = document.getElementById('spell-input');
+      const fb = document.getElementById('spell-feedback');
+      if (input) input.value = w.word;
+      if (fb) fb.innerHTML = `<div class="feedback ok">💡 答案：<strong>${w.word}</strong></div>`;
+    },
+
+    checkSpell() {
+      const w = App._viewedWord;
+      if (!w) return;
+      const input = document.getElementById('spell-input');
+      const fb = document.getElementById('spell-feedback');
+      const v = (input.value || '').trim().toLowerCase();
+      if (v === w.word.toLowerCase()) {
+        fb.innerHTML = '<div class="feedback ok">🎉 拼对了！</div>';
+        setTimeout(() => window._nextStep && window._nextStep(), 800);
+      } else if (!v) {
+        fb.innerHTML = '<div class="feedback err">先输入拼写再提交</div>';
+      } else {
+        fb.innerHTML = `<div class="feedback err">正确：<strong>${w.word}</strong></div>`;
+      }
     },
 
     revealHint() {

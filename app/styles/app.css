@@ -1082,3 +1082,100 @@ a { color: var(--c-primary-dark); text-decoration: none; }
 }
 .home-plan-badge.review { color: #f39c12; }
 .home-plan-badge.key { color: var(--c-primary); }
+
+/* ============ 首页 v0.6.5：紧凑任务卡（去词清单）=========== */
+.home-plan-card {
+  width: 100%;
+  max-width: 420px;
+  background: linear-gradient(135deg, #fff5e8 0%, #ffeed8 100%);
+  border-radius: 14px;
+  padding: 16px 20px;
+  margin: 8px 0;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+}
+.home-plan-unit {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--c-text);
+  margin-bottom: 8px;
+}
+.home-plan-unit-id {
+  font-size: 12px;
+  color: var(--c-text-soft, #8a7e6b);
+  font-weight: 500;
+}
+.home-plan-count {
+  font-size: 15px;
+  color: var(--c-text);
+  margin-bottom: 4px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.home-plan-count strong {
+  color: var(--c-primary);
+  font-size: 18px;
+  font-weight: 800;
+}
+.home-plan-dot {
+  color: var(--c-text-soft, #aaa);
+}
+.home-plan-time {
+  font-size: 12px;
+  color: var(--c-text-soft, #8a7e6b);
+}
+
+/* 单词卡顶部进度条（替代首页词清单的进度感知）*/
+.card-progress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  font-size: 12px;
+  color: var(--c-text-soft, #8a7e6b);
+  font-weight: 600;
+}
+.card-progress-bar {
+  flex: 1;
+  height: 4px;
+  background: #f0e9d8;
+  border-radius: 2px;
+  overflow: hidden;
+}
+.card-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--c-primary) 0%, var(--c-primary-dark, #d97706) 100%);
+  transition: width 0.4s ease;
+}
+.card-progress-num {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--c-primary);
+}
+
+/* ============ D014 拼读步骤样式 ============ */
+.syllable-chip {
+  display: inline-block;
+  background: #fff5e8;
+  color: var(--c-primary-dark, #b45309);
+  font-weight: 700;
+  font-size: 18px;
+  padding: 6px 12px;
+  border-radius: 12px;
+  margin: 0 2px;
+  border: 1px solid #f4d9a8;
+}
+.syllable-dot {
+  display: inline-block;
+  color: var(--c-primary);
+  font-weight: 800;
+  font-size: 16px;
+  margin: 0 2px;
+}
+
+/* D014：删除以下旧样式（v0.6.4 已下线的 9 步流程）*/
+.step-segment, .step-restore, .step-special, .step-follow, .step-combine, .step-pre-dictation-follow {
+  display: none !important;
+}
